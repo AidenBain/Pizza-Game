@@ -30,9 +30,9 @@ public class PizzaController : MonoBehaviour, IInteractableFood
         isGettingCarried = true;
     }
 
-    /*void OnTriggerEnter(Collider other)
+    void IInteractableFood.GetPutDown()
     {
-        GetPickedUp();
+        isGettingCarried = false;
+    }
 
-    }*/
 }
