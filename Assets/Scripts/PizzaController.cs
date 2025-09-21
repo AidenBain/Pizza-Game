@@ -1,8 +1,10 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PizzaController : MonoBehaviour, IInteractableFood
 {
-
+    InputAction moveAction;
+    Vector3 directionThrowable;
     GameObject playerObj;
     GameObject pizzaObj;
     bool isGettingCarried = false;
@@ -12,12 +14,16 @@ public class PizzaController : MonoBehaviour, IInteractableFood
     void Start()
     {
         playerObj = GameObject.Find("Player");
-        pizzaObj = GameObject.Find("Pizza");
+        moveAction = InputSystem.actions.FindAction("Move");
+        pizzaObj = this.gameObject;
     }
 
     // Update is called once per frame
     void Update()
     {
+        Vector2 moveInput = moveAction.ReadValue<Vector2>();
+        directionThrowable = new Vector3(moveInput.x, 0, moveInput.y);
+
         if (isGettingCarried)
         {
             pizzaObj.transform.position = playerObj.GetComponent<Transform>().position + holdingPosition;
@@ -33,7 +39,7 @@ public class PizzaController : MonoBehaviour, IInteractableFood
     void IInteractableFood.GetPutDown()
     {
         isGettingCarried = false;
-        pizzaObj.GetComponent<Rigidbody>().AddForce(Vector3.left * 500);
+        pizzaObj.GetComponent<Rigidbody>().AddForce(directionThrowable * 500);
     }
 
     /*void OnCollisionEnter(Collision collision)
