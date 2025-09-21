@@ -9,6 +9,8 @@ public class EnemyMovement : MonoBehaviour
     void Update()
     {
         transform.LookAt(player.transform);
-        transform.position = Vector3.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);   
+        transform.position = Vector3.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
     }
+    
+    
 }
