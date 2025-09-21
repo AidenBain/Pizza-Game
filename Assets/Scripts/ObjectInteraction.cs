@@ -7,7 +7,8 @@ public class ObjectInteraction : MonoBehaviour
     InputAction grabAction;
     bool grabActionisPressed = false;
     IInteractableFood? carriedFood = null;
-    //CharacterController pizzaController;
+    GameObject playerObj;
+    [SerializeField]GameObject pizzaPrefab;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -15,7 +16,7 @@ public class ObjectInteraction : MonoBehaviour
         grabAction = InputSystem.actions.FindAction("Interact");
         grabAction.Enable();
         //InputSystem.actions.FindAction(;"Interact");
-        //CharacterController = GetComponent<CharacterController>();
+        playerObj = GameObject.Find("Player");
 
     }
 
@@ -31,26 +32,33 @@ public class ObjectInteraction : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if(other.TryGetComponent<IInteractableFood>(out IInteractableFood food))
+        if (other.TryGetComponent<IInteractableFood>(out IInteractableFood food))
         {
-            if(grabAction.IsPressed() && !grabActionisPressed)
+            if (grabAction.IsPressed() && !grabActionisPressed && carriedFood == null)
             {
                 food.GetPickedUp();
                 carriedFood = food;
                 grabActionisPressed = true;
             }
-            
+
+        }
+
+        if (grabAction.IsPressed() && !grabActionisPressed && carriedFood != null)
+        {
+            carriedFood.GetPutDown();
+            carriedFood = null;
+            grabActionisPressed = true;
         }
 
         if(other.name == "Oven")
         {
-            if(grabAction.IsPressed())
+            if (grabAction.IsPressed() && !grabActionisPressed)
             {
-                if(carriedFood != null)
-                {
-                    carriedFood.GetPutDown();
-                }
-                carriedFood = null;
+                GameObject pizza = Instantiate(pizzaPrefab, playerObj.transform.position, Quaternion.identity);
+                pizza.TryGetComponent<IInteractableFood>(out IInteractableFood interactablePizza);
+                interactablePizza.GetPickedUp();
+                carriedFood = interactablePizza;
+                grabActionisPressed = true;
             }
             
         }
