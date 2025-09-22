@@ -9,6 +9,7 @@ public class BarrierManager : MonoBehaviour, IDamageable
     void Start()
     {
         currentHealth = maxHealth;
+        healthBarManager = GameObject.Find("HealthBar").GetComponent<HealthBarManager>();
     }
     void IDamageable.TakeDamage(int damage)
     {
